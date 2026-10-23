@@ -3,6 +3,17 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 const AuthContext = createContext(null);
 
+export const SITE_URL = 'https://untold-wordora.vercel.app/';
+
+export const getRedirectUrl = () => {
+  if (typeof window !== 'undefined') {
+    if (window.location.origin.includes('vercel.app') || !window.location.hostname.includes('localhost')) {
+      return `${window.location.origin}/`;
+    }
+  }
+  return SITE_URL;
+};
+
 const DEFAULT_DEMO_USER = {
   id: 'demo-user-id',
   email: 'wanderer@unfiltered.space',
@@ -123,7 +134,8 @@ export const AuthProvider = ({ children }) => {
           data: {
             username,
             bio
-          }
+          },
+          emailRedirectTo: getRedirectUrl()
         }
       });
       if (error) throw error;
@@ -267,7 +279,10 @@ export const AuthProvider = ({ children }) => {
     if (isLive && supabase) {
       const { data, error } = await supabase.auth.resend({
         type: 'signup',
-        email
+        email,
+        options: {
+          emailRedirectTo: getRedirectUrl()
+        }
       });
       if (error) throw error;
       return data;
