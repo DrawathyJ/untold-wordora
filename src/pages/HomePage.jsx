@@ -61,7 +61,7 @@ export default function HomePage() {
 
           {/* Search Box */}
           <div className="search-box">
-            <Search size={18} color="var(--amber-primary)" />
+            <Search size={16} color="var(--text-muted)" />
             <input
               type="text"
               placeholder="Search honest stories, thoughts, tags..."
@@ -92,7 +92,6 @@ export default function HomePage() {
                 aria-selected={selectedCategory === cat.id}
                 id={`cat-pill-${cat.id.toLowerCase().replace(/\s+/g, '-')}`}
               >
-                <span>{cat.icon}</span>
                 <span>{cat.label}</span>
               </button>
             ))}
@@ -150,7 +149,7 @@ export default function HomePage() {
             border: '1px solid var(--border-subtle)',
             borderRadius: 'var(--radius-xl)'
           }}>
-            <Feather size={40} color="var(--amber-primary)" style={{ margin: '0 auto 1.25rem', opacity: 0.8 }} />
+            <Feather size={32} color="var(--text-muted)" style={{ margin: '0 auto 1.25rem' }} />
             <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.5rem' }}>No thoughts here yet</h3>
             <p style={{ color: 'var(--text-muted)', maxWidth: '420px', margin: '0 auto 1.75rem', fontSize: '0.92rem' }}>
               {searchQuery

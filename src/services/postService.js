@@ -45,10 +45,7 @@ export const postService = {
       try {
         let query = supabase
           .from('posts')
-          .select(`
-            *,
-            profiles:user_id (id, username, bio, avatar_url)
-          `)
+          .select('*')
           .eq('is_published', true);
 
         if (category && category !== 'All') {
@@ -61,11 +58,24 @@ export const postService = {
           query = query.order('relate_count', { ascending: false });
         }
 
-        const { data, error } = await query;
+        const { data: postsData, error } = await query;
         if (error) throw error;
 
-        let results = (data || []).map((post) => {
-          const profile = post.profiles || {};
+        // Fetch author profiles for non-anonymous posts
+        const userIds = [...new Set((postsData || []).filter(p => !p.is_anonymous && p.user_id).map(p => p.user_id))];
+        let profilesMap = {};
+        if (userIds.length > 0) {
+          const { data: profiles } = await supabase
+            .from('profiles')
+            .select('id, username, bio, avatar_url')
+            .in('id', userIds);
+          (profiles || []).forEach(prof => {
+            profilesMap[prof.id] = prof;
+          });
+        }
+
+        let results = (postsData || []).map((post) => {
+          const profile = profilesMap[post.user_id] || {};
           return {
             ...post,
             author_name: post.is_anonymous ? 'Anonymous Soul' : (profile.username || 'Unfiltered Writer'),
@@ -124,16 +134,22 @@ export const postService = {
       try {
         const { data, error } = await supabase
           .from('posts')
-          .select(`
-            *,
-            profiles:user_id (id, username, bio, avatar_url)
-          `)
+          .select('*')
           .eq('id', id)
           .single();
 
         if (error) throw error;
 
-        const profile = data.profiles || {};
+        let profile = {};
+        if (!data.is_anonymous && data.user_id) {
+          const { data: prof } = await supabase
+            .from('profiles')
+            .select('id, username, bio, avatar_url')
+            .eq('id', data.user_id)
+            .maybeSingle();
+          if (prof) profile = prof;
+        }
+
         return {
           data: {
             ...data,

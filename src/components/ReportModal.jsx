@@ -49,14 +49,15 @@ export default function ReportModal({ postId, postTitle, onClose }) {
             <div style={{
               width: '2.2rem',
               height: '2.2rem',
-              borderRadius: 'var(--radius-md)',
-              background: 'rgba(244, 63, 94, 0.15)',
+              borderRadius: 'var(--radius-sm)',
+              background: '#000000',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'var(--rose-relate)'
+              color: '#ffffff'
             }}>
-              <Flag size={16} />
+              <Flag size={15} />
             </div>
             <div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>Report Content</h3>
@@ -103,8 +104,8 @@ export default function ReportModal({ postId, postTitle, onClose }) {
                       gap: '0.75rem',
                       padding: '0.6rem 0.85rem',
                       borderRadius: 'var(--radius-md)',
-                      background: reason === r.id ? 'rgba(245, 158, 11, 0.08)' : 'var(--bg-input)',
-                      border: `1px solid ${reason === r.id ? 'var(--amber-primary)' : 'var(--border-subtle)'}`,
+                      background: reason === r.id ? 'rgba(255, 255, 255, 0.08)' : 'var(--bg-input)',
+                      border: `1px solid ${reason === r.id ? '#ffffff' : 'var(--border-subtle)'}`,
                       cursor: 'pointer',
                       fontSize: '0.86rem'
                     }}

@@ -141,12 +141,12 @@ Instead, I locked my screen and stared at the ceiling until sleep finally took m
 ];
 
 export const CATEGORIES = [
-  { id: "All", label: "All Stories", icon: "✨" },
-  { id: "Life", label: "Life", icon: "🌿" },
-  { id: "Relationships", label: "Relationships", icon: "💔" },
-  { id: "Overthinking", label: "Overthinking", icon: "💭" },
-  { id: "Dreams", label: "Dreams", icon: "🌌" },
-  { id: "Failures", label: "Failures", icon: "🍂" },
-  { id: "Unpopular Opinions", label: "Unpopular Opinions", icon: "⚡" },
-  { id: "Random Ideas", label: "Random Ideas", icon: "💡" }
+  { id: "All", label: "All Stories" },
+  { id: "Life", label: "Life" },
+  { id: "Relationships", label: "Relationships" },
+  { id: "Overthinking", label: "Overthinking" },
+  { id: "Dreams", label: "Dreams" },
+  { id: "Failures", label: "Failures" },
+  { id: "Unpopular Opinions", label: "Unpopular Opinions" },
+  { id: "Random Ideas", label: "Random Ideas" }
 ];

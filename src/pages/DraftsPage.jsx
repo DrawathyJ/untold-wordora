@@ -64,16 +64,17 @@ export default function DraftsPage() {
           width: '3.5rem',
           height: '3.5rem',
           borderRadius: '50%',
-          background: 'rgba(245, 158, 11, 0.12)',
+          background: 'rgba(255, 255, 255, 0.05)',
+          border: '1px solid var(--border-subtle)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'var(--amber-primary)',
+          color: '#ffffff',
           margin: '0 auto 1.5rem'
         }}>
-          <Lock size={26} />
+          <Lock size={22} />
         </div>
-        <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '0.75rem' }}>
+        <h2 style={{ fontFamily: 'var(--font-title)', fontSize: '2.2rem', fontWeight: 400, marginBottom: '0.75rem' }}>
           Your Private Writing Space
         </h2>
         <p style={{ color: 'var(--text-muted)', maxWidth: '460px', margin: '0 auto 2rem', fontSize: '0.95rem' }}>
@@ -87,21 +88,21 @@ export default function DraftsPage() {
   }
 
   return (
-    <div className="app-container animate-fade-in" style={{ padding: '3rem 0 6rem' }}>
+    <div className="app-container animate-fade-in" style={{ padding: '3.5rem 0 6rem' }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '1.5rem' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.35rem' }}>
-            <Lock size={20} color="var(--amber-primary)" />
-            <h1 style={{ fontSize: '1.8rem', fontWeight: 800 }}>Private Drafts Vault</h1>
+            <Lock size={18} color="#ffffff" />
+            <h1 style={{ fontFamily: 'var(--font-title)', fontSize: '2.2rem', fontWeight: 400 }}>Private Drafts Vault</h1>
           </div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
             Unpublished writings visible only to you. Take all the time you need.
           </p>
         </div>
 
         <Link to="/write" className="btn btn-primary" id="btn-create-new-draft">
-          <PlusCircle size={16} />
+          <PlusCircle size={15} />
           <span>New Thought</span>
         </Link>
       </div>
@@ -115,11 +116,11 @@ export default function DraftsPage() {
           padding: '4.5rem 2rem',
           background: 'var(--bg-surface)',
           border: '1px solid var(--border-subtle)',
-          borderRadius: 'var(--radius-xl)'
+          borderRadius: 'var(--radius-sm)'
         }}>
-          <Sparkles size={36} color="var(--amber-primary)" style={{ margin: '0 auto 1rem', opacity: 0.8 }} />
-          <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem' }}>Your vault is empty</h3>
-          <p style={{ color: 'var(--text-muted)', maxWidth: '420px', margin: '0 auto 1.5rem', fontSize: '0.9rem' }}>
+          <Lock size={32} color="var(--text-muted)" style={{ margin: '0 auto 1rem' }} />
+          <h3 style={{ fontFamily: 'var(--font-title)', fontSize: '1.5rem', fontWeight: 500, marginBottom: '0.5rem' }}>Your vault is empty</h3>
+          <p style={{ color: 'var(--text-muted)', maxWidth: '420px', margin: '0 auto 1.5rem', fontSize: '0.88rem' }}>
             Have something lingering in your mind? Write it down here without publishing it.
           </p>
           <Link to="/write" className="btn btn-secondary">
@@ -131,7 +132,7 @@ export default function DraftsPage() {
           {drafts.map((draft) => (
             <div key={draft.id} className="card-glass" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                <span className="badge" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24' }}>
+                <span className="badge badge-editorial">
                   {draft.category || 'Draft'}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>

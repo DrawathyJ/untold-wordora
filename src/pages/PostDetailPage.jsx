@@ -175,7 +175,7 @@ export default function PostDetailPage() {
         {/* Post Header */}
         <header className="post-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
-            <span className={`badge badge-${post.category.toLowerCase().replace(/\s+/g, '')}`}>
+            <span className="badge badge-editorial">
               {post.category}
             </span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
@@ -185,7 +185,7 @@ export default function PostDetailPage() {
               </span>
             </div>
             {!post.is_published && (
-              <span className="badge" style={{ background: 'rgba(245, 158, 11, 0.2)', color: '#fbbf24' }}>
+              <span className="badge" style={{ border: '1px solid rgba(255, 255, 255, 0.2)', color: '#ffffff' }}>
                 Private Draft
               </span>
             )}

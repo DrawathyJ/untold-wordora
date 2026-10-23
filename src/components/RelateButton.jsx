@@ -67,13 +67,15 @@ export default function RelateButton({ postId, initialCount = 0, size = 'normal'
     >
       <Heart
         size={isSmall ? 14 : 16}
-        className={hasRelated ? 'fill-rose' : ''}
+        fill={hasRelated ? '#ffffff' : 'none'}
         style={{
-          color: hasRelated ? 'var(--rose-relate)' : 'inherit',
-          transition: 'transform 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67)'
+          color: hasRelated ? '#ffffff' : 'var(--text-muted)',
+          transition: 'all 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67)'
         }}
       />
-      <span>{hasRelated ? 'I relate' : 'Relate'}</span>
+      <span style={{ color: hasRelated ? '#ffffff' : 'var(--text-secondary)' }}>
+        {hasRelated ? 'I relate' : 'Relate'}
+      </span>
       <span style={{
         marginLeft: '2px',
         fontWeight: 700,

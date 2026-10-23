@@ -219,7 +219,7 @@ export default function WritePage() {
               >
                 {CATEGORIES.filter(c => c.id !== 'All').map(c => (
                   <option key={c.id} value={c.id}>
-                    {c.icon} {c.label}
+                    {c.label}
                   </option>
                 ))}
               </select>

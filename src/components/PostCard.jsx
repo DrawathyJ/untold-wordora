@@ -3,19 +3,6 @@ import { Link } from 'react-router-dom';
 import { EyeOff, Clock, Share2 } from 'lucide-react';
 import RelateButton from './RelateButton';
 
-// Category color class helper
-const getCategoryBadgeClass = (cat) => {
-  switch (cat) {
-    case 'Life': return 'badge-life';
-    case 'Relationships': return 'badge-relationships';
-    case 'Overthinking': return 'badge-overthinking';
-    case 'Dreams': return 'badge-dreams';
-    case 'Failures': return 'badge-failures';
-    case 'Unpopular Opinions': return 'badge-unpopular';
-    default: return 'badge-ideas';
-  }
-};
-
 // Calculate read time
 const getReadTime = (content) => {
   const words = (content || '').trim().split(/\s+/).length;
@@ -54,7 +41,7 @@ export default function PostCard({ post }) {
     <article className="card-glass story-card animate-fade-in" id={`story-card-${post.id}`}>
       {/* Card Header */}
       <div className="story-card-header">
-        <span className={`badge ${getCategoryBadgeClass(post.category)}`}>
+        <span className="badge badge-editorial">
           {post.category}
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>

@@ -58,17 +58,6 @@ export default function Navbar() {
 
           {/* Right Actions */}
           <div className="nav-actions">
-            {/* Database indicator pill */}
-            <button
-              onClick={() => setConfigModalOpen(true)}
-              className="db-status-pill"
-              title={isLive ? "Connected to Supabase PostgreSQL" : "Running on Local Sandbox (Click to connect live Supabase)"}
-              id="db-status-pill-btn"
-            >
-              <span className={`status-dot ${isLive ? 'online' : 'sandbox'}`} />
-              <Database size={13} />
-              <span>{isLive ? 'Supabase Live' : 'Sandbox DB'}</span>
-            </button>
 
             {/* User Profile or Sign In */}
             {user ? (

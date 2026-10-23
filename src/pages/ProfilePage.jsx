@@ -135,11 +135,11 @@ export default function ProfilePage() {
 
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <h1 style={{ fontSize: '1.75rem', fontWeight: 800 }}>
+                <h1 style={{ fontFamily: 'var(--font-title)', fontSize: '2.2rem', fontWeight: 400 }}>
                   @{profile?.username || user?.username || 'writer'}
                 </h1>
                 {isSelf && (
-                  <span className="badge" style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#6ee7b7' }}>
+                  <span className="badge" style={{ border: '1px solid rgba(255, 255, 255, 0.2)', color: '#ffffff' }}>
                     You
                   </span>
                 )}
@@ -165,13 +165,13 @@ export default function ProfilePage() {
                 className="btn btn-secondary"
                 id="btn-edit-profile"
               >
-                <Edit3 size={15} />
+                <Edit3 size={14} />
                 <span>{isEditing ? 'Cancel Edit' : 'Edit Profile'}</span>
               </button>
               <button
                 onClick={signOut}
                 className="btn btn-ghost"
-                style={{ color: 'var(--rose-relate)' }}
+                style={{ color: 'var(--text-muted)' }}
                 id="btn-sign-out"
                 title="Sign out of account"
               >
@@ -242,18 +242,20 @@ export default function ProfilePage() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '0.5rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.75rem', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', gap: '0.75rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.75rem', marginBottom: '2rem' }}>
         <button
           onClick={() => setActiveTab('published')}
           className={`btn btn-ghost ${activeTab === 'published' ? 'active' : ''}`}
           style={{
-            color: activeTab === 'published' ? 'var(--amber-primary)' : 'var(--text-muted)',
-            fontWeight: activeTab === 'published' ? 700 : 500,
+            color: activeTab === 'published' ? '#ffffff' : 'var(--text-muted)',
+            fontWeight: activeTab === 'published' ? 600 : 400,
+            borderBottom: activeTab === 'published' ? '1px solid #ffffff' : 'none',
+            borderRadius: 0,
             gap: '0.45rem'
           }}
           id="tab-profile-published"
         >
-          <BookOpen size={16} />
+          <BookOpen size={15} />
           <span>Public Stories ({publishedStories.length})</span>
         </button>
 
@@ -262,13 +264,15 @@ export default function ProfilePage() {
             onClick={() => setActiveTab('anonymous')}
             className={`btn btn-ghost ${activeTab === 'anonymous' ? 'active' : ''}`}
             style={{
-              color: activeTab === 'anonymous' ? '#c4b5fd' : 'var(--text-muted)',
-              fontWeight: activeTab === 'anonymous' ? 700 : 500,
+              color: activeTab === 'anonymous' ? '#ffffff' : 'var(--text-muted)',
+              fontWeight: activeTab === 'anonymous' ? 600 : 400,
+              borderBottom: activeTab === 'anonymous' ? '1px solid #ffffff' : 'none',
+              borderRadius: 0,
               gap: '0.45rem'
             }}
             id="tab-profile-anonymous"
           >
-            <EyeOff size={16} />
+            <EyeOff size={15} />
             <span>My Anonymous Stories ({anonymousStories.length})</span>
           </button>
         )}
@@ -278,13 +282,15 @@ export default function ProfilePage() {
             onClick={() => setActiveTab('drafts')}
             className={`btn btn-ghost ${activeTab === 'drafts' ? 'active' : ''}`}
             style={{
-              color: activeTab === 'drafts' ? '#fbbf24' : 'var(--text-muted)',
-              fontWeight: activeTab === 'drafts' ? 700 : 500,
+              color: activeTab === 'drafts' ? '#ffffff' : 'var(--text-muted)',
+              fontWeight: activeTab === 'drafts' ? 600 : 400,
+              borderBottom: activeTab === 'drafts' ? '1px solid #ffffff' : 'none',
+              borderRadius: 0,
               gap: '0.45rem'
             }}
             id="tab-profile-drafts"
           >
-            <Lock size={15} />
+            <Lock size={14} />
             <span>Private Drafts ({drafts.length})</span>
           </button>
         )}
@@ -298,11 +304,11 @@ export default function ProfilePage() {
           textAlign: 'center',
           padding: '4rem 2rem',
           background: 'var(--bg-surface)',
-          borderRadius: 'var(--radius-xl)',
+          borderRadius: 'var(--radius-sm)',
           border: '1px solid var(--border-subtle)'
         }}>
-          <Feather size={32} color="var(--amber-primary)" style={{ margin: '0 auto 1rem', opacity: 0.7 }} />
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.4rem' }}>
+          <Feather size={28} color="var(--text-muted)" style={{ margin: '0 auto 1rem' }} />
+          <h3 style={{ fontFamily: 'var(--font-title)', fontSize: '1.5rem', fontWeight: 500, marginBottom: '0.4rem' }}>
             No stories in this view
           </h3>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: '1.5rem' }}>

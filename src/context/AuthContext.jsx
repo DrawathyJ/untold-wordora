@@ -262,6 +262,19 @@ export const AuthProvider = ({ children }) => {
     setAuthModalOpen(false);
   };
 
+  // Resend email verification
+  const resendVerification = async (email) => {
+    if (isLive && supabase) {
+      const { data, error } = await supabase.auth.resend({
+        type: 'signup',
+        email
+      });
+      if (error) throw error;
+      return data;
+    }
+    return { success: true };
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -274,6 +287,7 @@ export const AuthProvider = ({ children }) => {
         signOut,
         loginAsDemo,
         updateProfile,
+        resendVerification,
         authModalOpen,
         authModalTab,
         openAuthModal,
