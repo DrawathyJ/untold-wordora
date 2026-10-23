@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LogIn, UserPlus, X, AlertCircle, Sparkles, Feather, Mail, CheckCircle2, RefreshCw } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -19,8 +19,18 @@ export default function AuthModal() {
     title: '',
     description: ''
   });
-  const [resendStatus, setResendStatus] = useState('');
+  const [resendStatus, setResendStatus] = useState(null);
   const [resending, setResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  // Cooldown countdown timer for resending verification email
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = setInterval(() => {
+      setResendCooldown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [resendCooldown]);
 
   if (!authModalOpen) return null;
 
@@ -102,32 +112,31 @@ export default function AuthModal() {
   };
 
   const handleResend = async () => {
-    if (!verifyModal.email) return;
+    if (!verifyModal.email || resending || resendCooldown > 0) return;
     setResending(true);
-    setResendStatus('');
+    setResendStatus(null);
 
     try {
       const res = await resendVerification(verifyModal.email);
+      setResendCooldown(60);
       if (res?.rateLimited) {
-        setResendStatus('Verification link is active. Please check your inbox & spam folder.');
+        setResendStatus({
+          type: 'warning',
+          text: 'Supabase email limit exceeded: Default mailer allows only 2-3 emails/hr. Check your inbox/spam or enable Custom SMTP in Supabase.'
+        });
       } else {
-        setResendStatus('Verification link sent to your email!');
+        setResendStatus({
+          type: 'success',
+          text: 'Verification link resent to your email! Please check your inbox and spam folder.'
+        });
       }
     } catch (err) {
-      const msg = err?.message || '';
-      const lower = msg.toLowerCase();
-      if (
-        lower.includes('rate limit') ||
-        lower.includes('limit') ||
-        lower.includes('exceed') ||
-        lower.includes('security') ||
-        lower.includes('seconds') ||
-        lower.includes('over_email_send_rate_limit')
-      ) {
-        setResendStatus('Verification link is active. Please check your inbox & spam folder.');
-      } else {
-        setResendStatus(msg || 'Could not resend email. Please try again.');
-      }
+      setResendCooldown(60);
+      const msg = err?.message || 'Could not resend email.';
+      setResendStatus({
+        type: 'error',
+        text: msg
+      });
     } finally {
       setResending(false);
     }
@@ -200,19 +209,24 @@ export default function AuthModal() {
             {resendStatus && (
               <div style={{
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.4rem',
+                alignItems: 'flex-start',
+                gap: '0.6rem',
                 fontSize: '0.82rem',
                 color: '#ffffff',
                 marginBottom: '1.25rem',
-                padding: '0.5rem',
-                background: 'rgba(255, 255, 255, 0.04)',
+                padding: '0.65rem 0.85rem',
+                background: resendStatus.type === 'success' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.04)',
                 borderRadius: 'var(--radius-xs)',
-                border: '1px solid var(--border-subtle)'
+                border: '1px solid var(--border-medium)',
+                textAlign: 'left',
+                lineHeight: 1.5
               }}>
-                <CheckCircle2 size={15} color="#ffffff" />
-                <span>{resendStatus}</span>
+                {resendStatus.type === 'success' ? (
+                  <CheckCircle2 size={16} color="#ffffff" style={{ flexShrink: 0, marginTop: '2px' }} />
+                ) : (
+                  <AlertCircle size={16} color="#ffffff" style={{ flexShrink: 0, marginTop: '2px' }} />
+                )}
+                <span>{resendStatus.text}</span>
               </div>
             )}
 
@@ -221,13 +235,19 @@ export default function AuthModal() {
               <button
                 type="button"
                 onClick={handleResend}
-                disabled={resending}
+                disabled={resending || resendCooldown > 0}
                 className="btn btn-secondary"
                 style={{ width: '100%', padding: '0.75rem', gap: '0.5rem' }}
                 id="btn-resend-verification"
               >
                 <RefreshCw size={14} className={resending ? 'spin' : ''} />
-                <span>{resending ? 'Resending Link...' : 'Resend Verification Link'}</span>
+                <span>
+                  {resending
+                    ? 'Resending Link...'
+                    : resendCooldown > 0
+                    ? `Resend available in ${resendCooldown}s`
+                    : 'Resend Verification Link'}
+                </span>
               </button>
 
               <button
