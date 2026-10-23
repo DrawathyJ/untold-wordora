@@ -37,27 +37,61 @@ export default function AuthModal() {
         if (!username.trim()) throw new Error('Please choose a username');
         const res = await signUp(email, password, { username: username.trim(), bio: bio.trim() });
 
-        // Show the email verification pop-up
+        // If email confirmation is disabled or session exists, sign in immediately!
+        if (res?.session) {
+          closeAuthModal();
+          return;
+        }
+
+        // If rate limited during signup, show friendly active link notice
+        if (res?.rateLimited) {
+          setVerifyModal({
+            isOpen: true,
+            email: email.trim(),
+            title: 'Verification Link Active',
+            description: 'A confirmation link has already been dispatched to your email. Please check your inbox and spam folder to log in.'
+          });
+          return;
+        }
+
+        // Show standard email verification pop-up
         setVerifyModal({
           isOpen: true,
           email: email.trim(),
           title: 'Verify Your Email',
-          description: 'A confirmation link has been sent to your email address. Please open your inbox (or spam folder) and verify your email to log in.'
+          description: 'A confirmation link has been sent to your email address. Please open your inbox (or spam folder) and click the verification link to log in.'
         });
       }
     } catch (err) {
       const msg = err.message || 'Authentication failed';
+      const lower = msg.toLowerCase();
+
       if (
-        msg.toLowerCase().includes('confirm') ||
-        msg.toLowerCase().includes('verify') ||
-        msg.toLowerCase().includes('not confirmed')
+        lower.includes('confirm') ||
+        lower.includes('verify') ||
+        lower.includes('not confirmed')
       ) {
         // Trigger popup message for unverified email on sign-in
         setVerifyModal({
           isOpen: true,
           email: email.trim(),
-          title: 'Please Verify Your Email',
-          description: 'Your account requires email confirmation before signing in. Check your inbox and click the verification link.'
+          title: 'Verify Your Email',
+          description: 'Your account requires email confirmation before signing in. Check your inbox and spam folder for your link.'
+        });
+      } else if (
+        lower.includes('rate limit') ||
+        lower.includes('limit') ||
+        lower.includes('exceed') ||
+        lower.includes('security') ||
+        lower.includes('seconds') ||
+        lower.includes('over_email_send_rate_limit')
+      ) {
+        // Never show "email time exceeded" or rate limit message
+        setVerifyModal({
+          isOpen: true,
+          email: email.trim(),
+          title: 'Verification Link Active',
+          description: 'A confirmation link was already dispatched to your email. Please check your inbox and spam folder, then log in.'
         });
       } else {
         setError(msg);
@@ -73,10 +107,27 @@ export default function AuthModal() {
     setResendStatus('');
 
     try {
-      await resendVerification(verifyModal.email);
-      setResendStatus('Verification link resent to your email!');
+      const res = await resendVerification(verifyModal.email);
+      if (res?.rateLimited) {
+        setResendStatus('Verification link is active. Please check your inbox & spam folder.');
+      } else {
+        setResendStatus('Verification link sent to your email!');
+      }
     } catch (err) {
-      setResendStatus(err.message || 'Could not resend email. Please try again.');
+      const msg = err?.message || '';
+      const lower = msg.toLowerCase();
+      if (
+        lower.includes('rate limit') ||
+        lower.includes('limit') ||
+        lower.includes('exceed') ||
+        lower.includes('security') ||
+        lower.includes('seconds') ||
+        lower.includes('over_email_send_rate_limit')
+      ) {
+        setResendStatus('Verification link is active. Please check your inbox & spam folder.');
+      } else {
+        setResendStatus(msg || 'Could not resend email. Please try again.');
+      }
     } finally {
       setResending(false);
     }

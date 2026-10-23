@@ -127,19 +127,57 @@ export const AuthProvider = ({ children }) => {
   // Sign up
   const signUp = async (email, password, { username, bio = '' }) => {
     if (isLive && supabase) {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            username,
-            bio
-          },
-          emailRedirectTo: getRedirectUrl()
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              username,
+              bio
+            },
+            emailRedirectTo: getRedirectUrl()
+          }
+        });
+        if (error) {
+          const msg = error.message || '';
+          if (
+            msg.toLowerCase().includes('rate limit') ||
+            msg.toLowerCase().includes('exceeded') ||
+            msg.toLowerCase().includes('security purposes') ||
+            msg.toLowerCase().includes('seconds') ||
+            msg.toLowerCase().includes('over_email_send_rate_limit')
+          ) {
+            return {
+              rateLimited: true,
+              user: null,
+              session: null
+            };
+          }
+          throw error;
         }
-      });
-      if (error) throw error;
-      return data;
+        if (data?.session?.user) {
+          setUser(data.session.user);
+          await fetchSupabaseProfile(data.session.user.id);
+        }
+        return data;
+      } catch (err) {
+        const msg = err.message || '';
+        if (
+          msg.toLowerCase().includes('rate limit') ||
+          msg.toLowerCase().includes('exceeded') ||
+          msg.toLowerCase().includes('security purposes') ||
+          msg.toLowerCase().includes('seconds') ||
+          msg.toLowerCase().includes('over_email_send_rate_limit')
+        ) {
+          return {
+            rateLimited: true,
+            user: null,
+            session: null
+          };
+        }
+        throw err;
+      }
     }
 
     // Mock sign up
@@ -277,15 +315,51 @@ export const AuthProvider = ({ children }) => {
   // Resend email verification
   const resendVerification = async (email) => {
     if (isLive && supabase) {
-      const { data, error } = await supabase.auth.resend({
-        type: 'signup',
-        email,
-        options: {
-          emailRedirectTo: getRedirectUrl()
+      try {
+        const { data, error } = await supabase.auth.resend({
+          type: 'signup',
+          email,
+          options: {
+            emailRedirectTo: getRedirectUrl()
+          }
+        });
+        if (error) {
+          const msg = error.message || '';
+          const lower = msg.toLowerCase();
+          if (
+            lower.includes('rate limit') ||
+            lower.includes('limit') ||
+            lower.includes('exceeded') ||
+            lower.includes('security') ||
+            lower.includes('seconds') ||
+            lower.includes('over_email_send_rate_limit')
+          ) {
+            return {
+              rateLimited: true,
+              message: 'A verification email is already active. Please check your inbox and spam folder.'
+            };
+          }
+          throw error;
         }
-      });
-      if (error) throw error;
-      return data;
+        return data;
+      } catch (err) {
+        const msg = err.message || '';
+        const lower = msg.toLowerCase();
+        if (
+          lower.includes('rate limit') ||
+          lower.includes('limit') ||
+          lower.includes('exceeded') ||
+          lower.includes('security') ||
+          lower.includes('seconds') ||
+          lower.includes('over_email_send_rate_limit')
+        ) {
+          return {
+            rateLimited: true,
+            message: 'A verification email is already active. Please check your inbox and spam folder.'
+          };
+        }
+        throw err;
+      }
     }
     return { success: true };
   };
